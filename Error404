@@ -1,0 +1,966 @@
+@notation/sings
+no space in the command means they are in the group to be write one after another
+single line space means copy the above command and hit enter
+#denotes comment in python
+the above is not applicable for java pogram
+
+
+******************************************PR-1****************************************** 
+####################Data Wrangling I ####################
+  
+
+#Import all the required Python Libraries
+#download iris dataset from kaggle and use in colab
+
+import pandas as pd
+import numpy as np
+
+#Load the Dataset into pandas dataframe.
+
+csv_url="/content/iris.csv"
+data=pd.read_csv(csv_url)
+data
+
+#Data Preprocessing
+
+data.isnull()
+
+dataset=pd.DataFrame(data)
+dataset
+
+data.describe()
+
+dataset.head(n=5)
+
+dataset.tail(n=5)
+
+dataset.index
+
+dataset.columns
+
+dataset.shape
+
+dataset.dtypes
+
+dataset.columns.values
+
+dataset.describe(include='all')
+
+dataset['PetalWidthCm']
+
+dataset.sort_index(axis=1,ascending=False)
+
+dataset.sort_values(by='petal_width')
+
+data.isna().sum()
+
+#Data Formatting and Normalizations
+
+data.dtypes
+
+data['sepal_length'].']=data['sepal_length'].astype('int')
+print(data.dtypes)
+
+dataset['species'].replace(['iris-setosa','iris-virginica'],[0,1],inplace=True)
+dataset
+
+#Turn categorical variables into quantitative variables
+
+data=pd.get_dummies(data,columns=['species'])
+data
+
+
+
+
+
+
+
+******************************************PR-2******************************************
+####################Data Wrangling II ####################
+import numpy as np
+import pandas as pd
+df=pd.read_csv("/StudentPerformance.csv")
+
+#for loading boston 
+data_url = "http://lib.stat.cmu.edu/datasets/boston"
+raw_df = pd.read_csv(data_url, sep="\s+", skiprows=22, header=None)
+data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])
+target = raw_df.values[1::2, 2]
+
+df.isnull()
+
+series=pd.isnull(df["math score"])
+df[series]
+
+df.notnull()
+
+series1=pd.notnull(df["math score"])
+df[series1]
+
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+df['placement score']=le.fit_transform(df['placement score'])
+newdf=df
+df
+
+ndf=df
+ndf.fillna(0)
+
+data = df
+data['math score']=data['math score'].fillna(data['math score'].mean())
+data['math score']=data['math score'].fillna(data['math score'].median())
+data['math score']=data['math score'].fillna(data['math score'].std())
+data['math score']=data['math score'].fillna(data['math score'].min())
+data['math score']=data['math score'].fillna(data['math score'].max())
+data
+
+m_v=df['math score'].mean()
+df['math score'].fillna(value=m_v,inplace=True)
+df
+
+ndf.replace(to_replace=np.nan,value=-99)
+
+ndf.dropna()
+ndf.dropna(how='all')
+
+ndf.dropna(axis =1)
+
+new_data=ndf.dropna(axis=0,how='any')
+new_data
+
+
+
+
+
+####################Descriptive Statistics - Measures of Central Tendency and variability ####################
+******************************************PR-3A******************************************
+#Provie summary statistics (mean, median, minimum, maximum, standard deviation)
+#Import all the required libraries and load datasets
+
+import pandas as pd
+import numpy as np
+import statistics as st
+df = pd.read_csv("/content/HRDataset_v14.csv")
+df
+
+#Mean,Median and Mode of the dataset
+
+#Mean
+bins = [18, 30, 40, 50, 60, 70]
+labels = ['18-29', '30-39', '40-49', '50-59', '60+']
+df['agerange'] = pd.cut(df.Age, bins,labels = labels,include_lowest = True)
+print("-------------------------------------MEAN--------------------------------------\n")
+print(df.groupby('agerange').mean())
+
+#Median
+print("-------------------------------------MEDIAN------------------------------------\n")
+print(df.groupby('agerange').median())
+
+#Minimum
+print("-------------------------------------MINIMUM-----------------------------------\n")
+print(df.groupby('agerange').min())
+
+
+
+
+******************************************PR-3B******************************************
+#Iris-setosa, Iris-versicolor, Irisverginica and use Iris dataset from kaggle
+import pandas as pd
+data = pd.read_csv("/content/Iris.csv")
+print('Iris-setosa')
+
+setosa = data['Species'] == 'Iris-setosa'
+print(data[setosa].describe())
+
+print('\nIris-versicolor')
+
+setosa = data['Species'] == 'Iris-versicolor'
+print(data[setosa].describe())
+
+print('\nIris-verginica')
+
+setosa = data['Species'] == 'Iris-virginica'
+print(data[setosa].describe())
+
+import statistics as st
+print(data.shape)
+print(data.info())
+
+data.mean()
+
+
+
+
+
+
+******************************************PR-4******************************************
+####################Data Analytics I ######################
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+%matplotlib inline
+csv_url="/content/boston.csv"
+data=pd.read_csv(csv_url)
+data
+
+dataset=pd.DataFrame(data)
+dataset
+
+dataset.head(n=5)
+
+#Data Preprocessing
+
+data.isnull().sum()
+
+#Exploratory Data Analysis
+
+sns.set9rc={'figure.figsize':(11.7,8.27)}
+sns.distplot(data['MEDV'],bins=30)
+plt.show()
+
+correlation_matrix=data.corr().round(2)
+sns.heatmap(data=correlation_matrix,annot=True)
+
+plt.figure(figsize=(20,5))
+
+features=['LSTAT','RM']
+
+target=data['MEDV']
+
+for i, col in enumerate(features):
+	plt.subplot(1,len(features),i+1)
+	x=data[col]
+	y=target
+	plt.scatter(x,y,marker='o')
+	plt.title(col)
+	plt.xlabel(col)
+	plt.ylabel('MEDV')
+
+#Splitting the data into training and testing
+
+X= pd.DataFrame(np.c_[data['LSTAT'],data['RM']],columns=['LSTAT','RM'])
+Y=data['MEDV']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state=5)
+
+print(X_train.shape)
+print(X_test.shape)
+print(Y_train.shape)
+print(Y_test.shape)
+
+#Training and testing the model
+
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+lin_model = LinearRegression()
+lin_model.fit(X_train, Y_train)
+
+#Model evaluation
+
+from sklearn.metrics import r2_score
+
+# model evaluation for training set
+
+y_train_predict = lin_model.predict(X_train)
+rmse = (np.sqrt(mean_squared_error(Y_train, y_train_predict)))
+r2 = r2_score(Y_train, y_train_predict)
+print("The model performance for training set")
+print("--------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+print("\n")
+
+# model evaluation for testing set
+
+y_test_predict = lin_model.predict(X_test)
+rmse = (np.sqrt(mean_squared_error(Y_test, y_test_predict)))
+r2 = r2_score(Y_test, y_test_predict)
+print("The model performance for testing set")
+print("--------------------------------------")
+print('RMSE is {}'.format(rmse))
+print('R2 score is {}'.format(r2))
+
+
+
+
+
+
+******************************************PR-5******************************************
+####################Data Analytics II ######################
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+dataset = pd.read_csv('/content/Social_Network_Ads.csv')
+dataset.head()
+
+X = dataset.iloc[:, [2, 3]].values
+y = dataset.iloc[:, 4].values
+print(X[:3, :])
+print('-'*15)
+print(y[:3])
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
+
+print(X_train[:3])
+print('-'*15)
+print(y_train[:3])
+print('-'*15)
+print(X_test[:3])
+print('-'*15)
+print(y_test[:3])
+
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+print(X_train[:3])
+print('-'*15)
+print(X_test[:3])
+
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0, solver='lbfgs' )
+classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
+print(X_test[:10])
+print('-'*15)
+print(y_pred[:10])
+
+print(y_pred[:20])
+print(y_test[:20])
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
+
+from matplotlib.colors import ListedColormap
+X_set, y_set = X_train, y_train
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+alpha = 0.6, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())
+for i, j in enumerate(np.unique(y_set)):
+	plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1]
+		c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('Logistic Regression (Training set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
+
+from matplotlib.colors import ListedColormap
+X_set, y_set = X_test, y_test
+X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
+np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
+plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
+alpha = 0.6, cmap = ListedColormap(('red', 'green')))
+plt.xlim(X1.min(), X1.max())
+plt.ylim(X2.min(), X2.max())
+for i, j in enumerate(np.unique(y_set)):
+	plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
+		c = ListedColormap(('red', 'green'))(i), label = j)
+plt.title('Logistic Regression (Test set)')
+plt.xlabel('Age')
+plt.ylabel('Estimated Salary')
+plt.legend()
+plt.show()
+
+
+
+
+
+
+******************************************PR-6******************************************
+####################Data Analytics III ######################
+#Importing the Libraries
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#Importing the dataset
+
+dataset = pd.read_csv('/content/IRIS.csv')
+
+X = dataset.iloc[:,:4].values
+y = dataset['Species'].values
+dataset.head(5)
+
+#Splitting the dataset into the Training set and Test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
+
+#Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+#Training the Naive Bayes Classification model on the Training Set
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+#Predicting the Test set results
+
+y_pred = classifier.predict(X_test)
+y_pred
+
+#Confusion Matrix and Accuracy
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+from sklearn.metrics import accuracy_score
+print ("Accuracy : ", accuracy_score(y_test, y_pred))
+cm
+
+#Comparing the Real Values with Predicted Values
+
+df = pd.DataFrame({'Real Values':y_test, 'Predicted Values':y_pred})
+df
+
+
+
+
+
+
+******************************************PR-7******************************************
+#################### Text Analytics ######################
+import nltk
+
+nltk.download('stopwords')
+nltk.download('words')
+nltk.download('wordnet')
+nltk.download('averged_perception_tagger')
+nltk.download('punkt')
+
+import pandas as pd
+import numpy as np
+
+sent= "They told that thier eges are 20 23 and 27 respectively"
+
+add=[]
+
+for word in sent.split():
+	if word.isdigit():
+		add.append(int(word))
+
+print ("Ave", sum(add)/len(add))
+
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+sent= "Hello all! how are you? Welcome to pune"
+
+sent_tokenize(sent)
+
+word_tokenize(sent)
+
+from nltk.tokenize import SpaceTokenizer
+tk=SpaceTokenizer()
+tk.tokenize(sent)
+
+sent='Hello all!\tHow are u?\tto pune'
+print(sent)
+
+s1='ctas','catlike','catty','cat'
+s2='stemmer','stemming','stemmed','stem'
+s3='fishing','fished','fisher','fish'
+s4='argue','argued','argues','argus'
+
+from nltk.stem import PorterStemmer
+ps=PorterStemmer()
+ps.stem(s3[0])
+
+for word in s4:
+	ps=PorterStemmer()
+	print(ps.stem(word))
+
+#lemmatization
+
+word='playing'
+from nltk.stem import WordNetLemmatizer
+
+wnl=WordNetLemmatizer()
+print(wnl.lemmatize(word,'n')) # noun
+print(wnl.lemmatize(word,'v')) # verb
+print(wnl.lemmatize(word,'a')) # adjective
+print(wnl.lemmatize(word,'r')) # adverb
+
+word='went'
+wnl=WordNetLemmatizer()
+print(wnl.lemmatize(word,'n')) # noun
+print(wnl.lemmatize(word,'v')) # verb
+print(wnl.lemmatize(word,'a')) # adjective
+print(wnl.lemmatize(word,'r')) # adverb
+
+# POS tagging
+
+from nltk import pos_tag
+
+import nltk
+nltk.download('averaged_perceptron_tagger')
+
+sents='Rajgad (literal meaning Ruling Fort) is a hill fort situated in the Pune district of Maharashtra, India. Formerly known as Murum'
+
+print(sents)
+
+words=word_tokenize(sents)
+nltk.download('omw-1.4')
+
+pos_tag(words)
+
+tags=pos_tag(words)
+
+for word in tags:
+	if word[1].startswith('V'):
+		print(word[0])
+
+# spell correction
+from textblob import TextBlob
+t=TextBlob('computoor')
+print(t.correct())
+
+t=TextBlob('nead')
+print(t.correct())
+
+
+
+
+
+******************************************PR-8******************************************
+#################### Data Visualization I ######################
+
+#Import Libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#Import Dataset
+
+dataset = sns.load_dataset('titanic')
+dataset.head()
+
+#Distributed Plots
+#(A) Distplot
+
+import seaborn as sns
+sns.distplot(x = dataset['age'], bins = 10)
+
+sns.distplot(dataset['age'], bins = 10,kde=False)
+
+#(b) Joint Plot
+
+sns.jointplot(x = dataset['age'], y = dataset['fare'], kind = 'scatter')
+
+sns.jointplot(x = dataset['age'], y = dataset['fare'], kind = 'hex')
+
+#(C) Rug Plot
+
+sns.rugplot(dataset['fare'])
+
+#Categorical Plots
+#(A) Bar Plot
+
+sns.barplot(x='sex', y='age', data=dataset)
+
+sns.barplot(x='sex', y='age', data=dataset, estimator=np.std)
+
+#(B) Count Plot
+
+sns.countplot(x='sex', data=dataset)
+
+#(C) Box Plot
+
+sns.boxplot(x='sex', y='age', data=dataset)
+
+sns.boxplot(x='sex', y='age', data=dataset, hue="survived")
+
+#(D) Violin Plot
+
+sns.violinplot(x='sex', y='age', data=dataset)
+
+#Advanced Plots
+#(A) Strip Plot
+
+sns.stripplot(x='sex', y='age', data=dataset, jitter=False)
+
+sns.stripplot(x='sex', y='age', data=dataset, jitter=True)
+
+sns.stripplot(x='sex', y='age', data=dataset, jitter=True, hue='survived')
+
+#(B) Swarm Plot
+
+sns.swarmplot(x='sex', y='age', data=dataset)
+
+sns.swarmplot(x='sex', y='age', data=dataset, hue='survived')
+
+#Matrix Plots
+
+#(A) Heat Maps
+
+dataset.head()
+
+dataset.corr()
+
+corr = dataset.corr()
+sns.heatmap(corr)
+
+corr = dataset.corr()
+sns.heatmap(corr, annot=True)
+
+corr = dataset.corr()
+sns.heatmap(corr)
+
+#(B) Cluster Map
+
+sns.histplot(dataset['fare'], kde=False, bins=10)
+
+
+
+
+
+******************************************PR-9******************************************
+#################### Data Visualization II ######################
+#Importing Libraries and titanic dataset
+
+import seaborn as sns
+dataset=sns.load_dataset('titanic')
+dataset.head()
+
+#Boxplot for distribution of age against gender
+
+sns.boxplot(x="sex",y="age",data=dataset)
+
+sns.boxplot(x="sex",y="age",data=dataset,hue='survived')
+
+
+
+******************************************PR-10******************************************
+#################### Data Visualization III ######################
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df1=pd.read_csv('/content/sample_data/iris.csv')
+df1
+
+df = pd.DataFrame(df1)
+df.head()
+
+df.describe()
+
+df.info()
+
+df.columns
+
+df['sepal.length'].max()
+
+df['sepal.length'].min() 
+
+df['sepal.length'].hist(bins=30)
+
+df['petal.length'].max()
+
+df['petal.length'].min()
+
+df['petal.length'].hist(bins=30)
+
+df['petal.width'].max()
+
+df['petal.length'].max()
+
+df['petal.length'].min()
+
+df['petal.length'].min()
+
+df['petal.length'].min()
+
+df['petal.width'].min()
+
+df['petal.width'].hist(bins=30)
+
+df['petal.width'].hist(bins=30)
+
+df['sepal.length'].min()
+
+df['sepal.width'].hist(bins=30)
+
+df['variety'].value_counts()
+
+df['variety'].hist(bins=20)
+
+sns.boxplot(x='sepal.length',data=df)
+
+sns.boxplot(x='sepal.width',data=df)
+
+sns.boxplot(x='petal.length',data=df)
+
+sns.boxplot(x='petal.width',data=df)
+
+
+
+
+
+
+
+
+******************************************PR-11******************************************
+
+
+//Java Code for word count:
+import java.io.IOException;
+import java.util.*;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.*;
+import org.apache.hadoop.mapreduce.lib.output.*;
+import org.apache.hadoop.util.*;
+public class WordCount extends Configured implements Tool
+{
+public static void main(String args[]) throws Exception
+{
+int res = ToolRunner.run(new WordCount(), args);
+System.exit(res);
+}
+public int run(String[] args) throws Exception
+{
+Path inputPath = new Path(args[0]);
+Path outputPath = new Path(args[1]);
+Configuration conf = getConf();
+
+Job job = new Job(conf, this.getClass().toString());
+job.setJarByClass(WordCount.class);
+FileInputFormat.setInputPaths(job, inputPath);
+FileOutputFormat.setOutputPath(job, outputPath);
+job.setJobName("WordCount");
+job.setMapperClass(Map.class);
+job.setCombinerClass(Reduce.class);
+job.setReducerClass(Reduce.class);
+job.setMapOutputKeyClass(Text.class);
+job.setMapOutputValueClass(IntWritable.class);
+job.setOutputKeyClass(Text.class);
+job.setOutputValueClass(IntWritable.class);
+job.setInputFormatClass(TextInputFormat.class);
+job.setOutputFormatClass(TextOutputFormat.class);
+return job.waitForCompletion(true) ? 0 : 1;
+}
+public static class Map extends Mapper<LongWritable, Text, Text,
+IntWritable>
+{
+private final static IntWritable one = new IntWritable(1);
+private Text word = new Text();
+public void map(LongWritable key, Text value, Mapper.Context
+context) throws IOException, InterruptedException
+{
+String line = value.toString();
+StringTokenizer tokenizer = new StringTokenizer(line);
+while (tokenizer.hasMoreTokens())
+{
+word.set(tokenizer.nextToken());
+context.write(word, one);
+}
+}
+}
+public static class Reduce extends Reducer<Text, IntWritable, Text,
+IntWritable>
+{
+public void reduce(Text key, Iterable<IntWritable> values, Context
+context) throws IOException, InterruptedException
+{
+int sum = 0;
+for(IntWritable value : values)
+{
+sum += value.get();
+}
+context.write(key, new IntWritable(sum));
+}
+}
+}
+
+/*
+Input File
+Pune
+Mumbai
+Nashik
+Pune
+Nashik
+Kolapur
+*/
+
+
+
+
+******************************************PR-12******************************************
+
+
+//Java Code to process logfile
+//Mapper Class:
+
+package SalesCountry;
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.*;
+
+public class SalesMapper extends MapReduceBase implements Mapper<LongWritable,
+Text, Text, IntWritable> {
+private final static IntWritable one = new IntWritable(1);
+public void map(LongWritable key, Text value, OutputCollector<Text,
+IntWritable> output, Reporter reporter) throws IOException {
+String valueString = value.toString();
+String[] SingleCountryData = valueString.split("-");
+output.collect(new Text(SingleCountryData[0]), one);
+}
+}
+
+
+//Reducer Class:
+
+import java.io.IOException;
+import java.util.*;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.*;
+public class SalesCountryReducer extends MapReduceBase implements Reducer<Text,
+IntWritable, Text, IntWritable> {
+public void reduce(Text t_key, Iterator<IntWritable> values,
+OutputCollector<Text,IntWritable> output, Reporter reporter) throws IOException
+{
+Text key = t_key;
+int frequencyForCountry = 0;
+while (values.hasNext()) {
+// replace type of value with the actual type of our value
+IntWritable value = (IntWritable) values.next();
+frequencyForCountry += value.get();
+}
+output.collect(key, new IntWritable(frequencyForCountry));
+}
+}
+
+
+//Driver Class:
+
+package SalesCountry;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
+
+public class SalesCountryDriver {
+public static void main(String[] args) {
+JobClient my_client = new JobClient();
+// Create a configuration object for the job
+JobConf job_conf = new JobConf(SalesCountryDriver.class);
+// Set a name of the Job
+job_conf.setJobName("SalePerCountry");
+// Specify data type of output key and value
+job_conf.setOutputKeyClass(Text.class);
+job_conf.setOutputValueClass(IntWritable.class);
+// Specify names of Mapper and Reducer Class
+job_conf.setMapperClass(SalesCountry.SalesMapper.class);
+job_conf.setReducerClass(SalesCountry.SalesCountryReducer.class);
+// Specify formats of the data type of Input and output
+job_conf.setInputFormat(TextInputFormat.class);
+job_conf.setOutputFormat(TextOutputFormat.class);
+// Set input and output directories using command line arguments,
+//arg[0] = name of input directory on HDFS, and arg[1] = name of
+output directory to be created to store the output file.
+FileInputFormat.setInputPaths(job_conf, new Path(args[0]));
+FileOutputFormat.setOutputPath(job_conf, new Path(args[1]));
+my_client.setConf(job_conf);
+try {
+// Run the job
+JobClient.runJob(job_conf);
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}
+
+/*
+Input File
+Pune
+Mumbai
+Nashik
+Pune
+Nashik
+Kolapur
+*/
+
+
+
+
+
+
+******************************************PR-13******************************************
+
+//Source Code:
+/* Sample Code to print Statement */
+
+object ExampleString {
+def main(args: Array[String]) {
+//declare and assign string variable "text"
+val text : String = "You are reading SCALA programming language.";
+//print the value of string variable "text"
+println("Value of text is: " + text);
+}
+}
+
+
+/**Scala program to find a number is positive, negative or positive.*/
+
+object ExCheckNumber {
+def main(args: Array[String]) {
+/**declare a variable*/
+var number= (-100);
+if(number==0){
+println("number is zero");
+}
+else if(number>0){
+println("number is positive");
+}
+else{
+println("number is negative");
+}
+}
+}
+
+
+
+/*Scala program to print your name*/
+
+object ExPrintName {
+def main(args: Array[String]) {
+println("My name is Mike!")
+}
+}
+
+
+/**Scala Program to find largest number among two numbers.*/
+
+object ExFindLargest {
+def main(args: Array[String]) {
+var number1=20;
+var number2=30;
+var x = 10;
+if( number1>number2){
+println("Largest number is:" + number1);
+}
+else{
+println("Largest number is:" + number2);
+}
+}
+}
